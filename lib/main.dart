@@ -6,7 +6,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -15,7 +14,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.green,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Swipe Page'),
+      home: MyHomePage(title: 'Swipe'),
     );
   }
 }
@@ -29,18 +28,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  // int _counter = 0;
+  int _selectedIndex = 0;
 
-  // void _incrementCounter() {
-  //   setState(() {
-  //     // This call to setState tells the Flutter framework that something has
-  //     // changed in this State, which causes it to rerun the build method below
-  //     // so that the display can reflect the updated values. If we changed
-  //     // _counter without calling setState(), then the build method would not be
-  //     // called again, and so nothing would appear to happen.
-  //     _counter++;
-  //   });
-  // }
 
   Person user1;
   Person user2;
@@ -61,75 +50,121 @@ class _MyHomePageState extends State<MyHomePage> {
     matchedWithUser = [];
   }
 
+  void _onNavTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     CardController controller;
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+
+    Container swipe = new Container(
+      height: MediaQuery.of(context).size.height * 2,
+      child: Stack(
+        children: <Widget>[
+          new Card(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text("You've reached the end."),
+                  Text("Come back later to see more suggestions!")
+                ],
+              ),
+            ),
+          ),
+          new Card(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text("You and ${user3.name} were a match!",
+                      style: TextStyle(fontSize: 25)),
+                  Text("Chat with them at zoom.com/xyz!",
+                      style: TextStyle(fontSize: 25)),
+                  FlatButton(
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(fontSize: 20.0),
+                    ),
+                    color: Colors.green,
+                    textColor: Colors.white,
+                    onPressed: () {}, //change this to make it do something
+                  ),
+                ],
+              ),
+            ),
+          ),
+          new TinderSwapCard(
+            swipeUp: true,
+            swipeDown: true,
+            orientation: AmassOrientation.BOTTOM,
+            totalNum: people.length,
+            stackNum: 3,
+            swipeEdge: 5.0,
+            maxWidth: MediaQuery.of(context).size.width * 1,
+            maxHeight: MediaQuery.of(context).size.width * 3,
+            minWidth: MediaQuery.of(context).size.width * 0.95,
+            minHeight: MediaQuery.of(context).size.width * 0.95,
+            cardBuilder: (context, index) => Card(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Image.asset('${people[index].image}'),
+                  Text(people[index].name, style: TextStyle(fontSize: 25)),
+                  Chip(label: Text(people[index].tag1)),
+                  Chip(label: Text(people[index].tag2)),
+                  Chip(label: Text(people[index].tag3)),
+                  Text(people[index].bioText),
+                ],
+              ),
+            ),
+            cardController: controller = CardController(),
+            swipeUpdateCallback: (DragUpdateDetails details, Alignment align) {
+              /// Get swiping card's alignment
+              if (align.x < 0) {
+                //Card is LEFT swiping
+              } else if (align.x > 0) {
+                //Card is RIGHT swiping
+              }
+            },
+            swipeCompleteCallback:
+              (CardSwipeOrientation orientation, int index) {
+              /// Get orientation & index of swiped card!
+              },
+          ),
+        ],
+      ),
+    );
+
+    List<Widget> _pages = <Widget>[
+      Text('Matches but change this to be a widget'),
+      swipe,
+      Text('Profile but change this to be a widget')
+    ];
 
     return new Scaffold(
-      body: new Center(
-        child: Container(
-          height: MediaQuery.of(context).size.height * 2,
-          child: Stack(
-            children: <Widget>[
-              new Card(
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget> [
-                      Text("You've reached the end."),
-                      Text("Come back later to see more suggestions!")
-                    ],
-                  ),  
-                )
-              ),  
-              new TinderSwapCard(
-                swipeUp: true,
-                swipeDown: true,
-                orientation: AmassOrientation.BOTTOM,
-                totalNum: people.length,
-                stackNum: 3,
-                swipeEdge: 5.0,
-                maxWidth: MediaQuery.of(context).size.width * 1,
-                maxHeight: MediaQuery.of(context).size.width * 3,
-                minWidth: MediaQuery.of(context).size.width * 0.95,
-                minHeight: MediaQuery.of(context).size.width * 0.95,
-                cardBuilder: (context, index) => Card(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: <Widget>[
-                      Image.asset('${people[index].image}'),
-                      Text(people[index].name),
-                      Chip(label: Text(people[index].tag1)),
-                      Chip(label: Text(people[index].tag2)),
-                      Chip(label: Text(people[index].tag3)),
-                      Text(people[index].bioText),
-                    ],
-                  ),
-                ),
-                cardController: controller = CardController(),
-                swipeUpdateCallback: (DragUpdateDetails details, Alignment align) {
-                  /// Get swiping card's alignment
-                  if (align.x < 0) {
-                    //Card is LEFT swiping
-
-                  } else if (align.x > 0) {
-                    //Card is RIGHT swiping
-                  }
-                },
-                swipeCompleteCallback:
-                  (CardSwipeOrientation orientation, int index) {
-                  /// Get orientation & index of swiped card!
-                },
-              ),
-            ],
+      body: new Center(child: _pages.elementAt(_selectedIndex)),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.thumb_up),
+            label: 'Matches',
           ),
-        ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.arrow_forward),
+            label: 'Swipe',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onNavTapped,
       ),
     );
   }
