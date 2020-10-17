@@ -85,9 +85,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: <Widget>[
                   Image.asset('${people[index].image}'),
                   Text(people[index].name),
-                  Text(people[index].tag1),
-                  Text(people[index].tag2),
-                  Text(people[index].tag3),
+                  Chip(label: Text(people[index].tag1)),
+                  Chip(label: Text(people[index].tag2)),
+                  Chip(label: Text(people[index].tag3)),
                   Text(people[index].bioText),
                 ],
               ),
