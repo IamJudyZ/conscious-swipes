@@ -48,9 +48,9 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Person> people;
 
   _MyHomePageState() {
-    user1 = Person('user1.jpg', 'user one', 'vegan', 'democrat', 'education', 'I like to talk to people!');
-    user2 = Person('user2.jpg', 'user two', 'christian', 'sustainability', 'democrat', 'Get to know me!');
-    user3 = Person('user3.jpg', 'user three', 'republican', 'pro-life', 'education', 'Swipe right if you want to have a nice chat!');
+    user1 = Person('user1.jpg', 'Sarah', 'vegan', 'democrat', 'education', 'I like to talk to people!');
+    user2 = Person('user2.jpg', 'Jacob', 'christian', 'sustainability', 'democrat', 'Get to know me!');
+    user3 = Person('user3.jpg', 'Tom', 'republican', 'pro-life', 'education', 'Swipe right if you want to have a nice chat!');
     people = [user1, user2, user3];
   }
 
@@ -67,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return new Scaffold(
       body: new Center(
         child: Container(
-          height: MediaQuery.of(context).size.height * 0.6,
+          height: MediaQuery.of(context).size.height * 2,
           child: new TinderSwapCard(
             swipeUp: true,
             swipeDown: true,
@@ -75,12 +75,22 @@ class _MyHomePageState extends State<MyHomePage> {
             totalNum: people.length,
             stackNum: 3,
             swipeEdge: 4.0,
-            maxWidth: MediaQuery.of(context).size.width * 0.9,
-            maxHeight: MediaQuery.of(context).size.width * 0.9,
-            minWidth: MediaQuery.of(context).size.width * 0.8,
-            minHeight: MediaQuery.of(context).size.width * 0.8,
+            maxWidth: MediaQuery.of(context).size.width * 1,
+            maxHeight: MediaQuery.of(context).size.width * 3,
+            minWidth: MediaQuery.of(context).size.width * 0.95,
+            minHeight: MediaQuery.of(context).size.width * 0.95,
             cardBuilder: (context, index) => Card(
-              child: Image.asset('${people[index].image}')
+              child: Column(
+              mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Image.asset('${people[index].image}'),
+                  Text(people[index].name),
+                  Text(people[index].tag1),
+                  Text(people[index].tag2),
+                  Text(people[index].tag3),
+                  Text(people[index].bioText),
+                ],
+              ),
             ),
             cardController: controller = CardController(),
             swipeUpdateCallback:
