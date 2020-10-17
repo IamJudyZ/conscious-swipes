@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
 
 void main() {
@@ -45,13 +46,25 @@ class _MyHomePageState extends State<MyHomePage> {
   Person user1;
   Person user2;
   Person user3;
+  Person user4;
+  Person user5;
+  Person user6;
   List<Person> people;
 
   _MyHomePageState() {
-    user1 = Person('user1.jpg', 'Sarah', 'vegan', 'democrat', 'education', 'I like to talk to people!');
-    user2 = Person('user2.jpg', 'Jacob', 'christian', 'sustainability', 'democrat', 'Get to know me!');
-    user3 = Person('user3.jpg', 'Tom', 'republican', 'pro-life', 'education', 'Swipe right if you want to have a nice chat!');
-    people = [user1, user2, user3];
+    user1 = Person('user1.jpg', 'Sarah', 'vegan', 'democrat', 'education',
+        'I like to talk to people!');
+    user2 = Person('user2.jpg', 'Jacob', 'christian', 'sustainability',
+        'democrat', 'Get to know me!');
+    user3 = Person('user3.jpg', 'Tom', 'republican', 'pro-life', 'education',
+        'Swipe right if you want to have a nice chat!');
+    user4 = Person('user1.jpg', 'Annie', 'healthcare', '2020 elections',
+        'education', 'Looking for a good conversation!');
+    user5 = Person('user2.jpg', 'Markus', 'christian', 'sustainability',
+        'vegan', 'Just chattin');
+    user6 = Person('user3.jpg', 'David', 'republican', 'pro-life', 'AI ethics',
+        'Covid has not helped my social life');
+    people = [user1, user2, user3, user4, user5, user6];
   }
 
   @override
@@ -67,34 +80,67 @@ class _MyHomePageState extends State<MyHomePage> {
     return new Scaffold(
       body: new Center(
         child: Container(
+          padding:
+              const EdgeInsets.only(bottom: 20, top: 20, left: 20, right: 20),
           height: MediaQuery.of(context).size.height * 2,
           child: new TinderSwapCard(
             swipeUp: true,
             swipeDown: true,
             orientation: AmassOrientation.BOTTOM,
             totalNum: people.length,
-            stackNum: 3,
+            stackNum: 6,
             swipeEdge: 4.0,
             maxWidth: MediaQuery.of(context).size.width * 1,
             maxHeight: MediaQuery.of(context).size.width * 3,
             minWidth: MediaQuery.of(context).size.width * 0.95,
             minHeight: MediaQuery.of(context).size.width * 0.95,
             cardBuilder: (context, index) => Card(
-              child: Column(
-              mainAxisSize: MainAxisSize.max,
-                children: <Widget>[
-                  Image.asset('${people[index].image}'),
-                  Text(people[index].name),
-                  Chip(label: Text(people[index].tag1)),
-                  Chip(label: Text(people[index].tag2)),
-                  Chip(label: Text(people[index].tag3)),
-                  Text(people[index].bioText),
-                ],
+              child: Container(
+                padding: const EdgeInsets.only(
+                    bottom: 20, top: 20, left: 20, right: 20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Image.asset('${people[index].image}'),
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            RichText(
+                              text: TextSpan(
+                                  style: DefaultTextStyle.of(context).style,
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                        text: people[index].name,
+                                        style: TextStyle(
+                                          fontFamily: 'Raleway',
+                                          fontSize: 25.0,
+                                          fontWeight: FontWeight.bold,
+                                        )),
+                                  ]),
+                            )
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text(people[index].bioText),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Chip(label: Text(people[index].tag1)),
+                            Chip(label: Text(people[index].tag2)),
+                            Chip(label: Text(people[index].tag3)),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
             cardController: controller = CardController(),
-            swipeUpdateCallback:
-                (DragUpdateDetails details, Alignment align) {
+            swipeUpdateCallback: (DragUpdateDetails details, Alignment align) {
               /// Get swiping card's alignment
               if (align.x < 0) {
                 //Card is LEFT swiping
@@ -110,7 +156,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
-
   }
 }
 
@@ -122,7 +167,6 @@ class Person {
   String tag3;
   String bioText;
 
-  Person(this.image, this.name, this.tag1, this.tag2, this.tag3, this.bioText); //constructor
+  Person(this.image, this.name, this.tag1, this.tag2, this.tag3,
+      this.bioText); //constructor
 }
-
-
