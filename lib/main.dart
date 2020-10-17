@@ -46,12 +46,19 @@ class _MyHomePageState extends State<MyHomePage> {
   Person user2;
   Person user3;
   List<Person> people;
+  List<Person> userMatchedWith;
+  List<Person> matchedWithUser;
 
   _MyHomePageState() {
-    user1 = Person('user1.jpg', 'Sarah', 'vegan', 'democrat', 'education', 'I like to talk to people!');
-    user2 = Person('user2.jpg', 'Jacob', 'christian', 'sustainability', 'democrat', 'Get to know me!');
-    user3 = Person('user3.jpg', 'Tom', 'republican', 'pro-life', 'education', 'Swipe right if you want to have a nice chat!');
+    user1 = Person('user1.jpg', 'Sarah', 'vegan', 'democrat', 'education',
+        'I like to talk to people!');
+    user2 = Person('user2.jpg', 'Jacob', 'christian', 'sustainability',
+        'democrat', 'Get to know me!');
+    user3 = Person('user3.jpg', 'Tom', 'republican', 'pro-life', 'education',
+        'Swipe right if you want to have a nice chat!');
     people = [user1, user2, user3];
+    userMatchedWith = [];
+    matchedWithUser = [];
   }
 
   @override
@@ -68,49 +75,63 @@ class _MyHomePageState extends State<MyHomePage> {
       body: new Center(
         child: Container(
           height: MediaQuery.of(context).size.height * 2,
-          child: new TinderSwapCard(
-            swipeUp: true,
-            swipeDown: true,
-            orientation: AmassOrientation.BOTTOM,
-            totalNum: people.length,
-            stackNum: 3,
-            swipeEdge: 4.0,
-            maxWidth: MediaQuery.of(context).size.width * 1,
-            maxHeight: MediaQuery.of(context).size.width * 3,
-            minWidth: MediaQuery.of(context).size.width * 0.95,
-            minHeight: MediaQuery.of(context).size.width * 0.95,
-            cardBuilder: (context, index) => Card(
-              child: Column(
-              mainAxisSize: MainAxisSize.max,
-                children: <Widget>[
-                  Image.asset('${people[index].image}'),
-                  Text(people[index].name),
-                  Chip(label: Text(people[index].tag1)),
-                  Chip(label: Text(people[index].tag2)),
-                  Chip(label: Text(people[index].tag3)),
-                  Text(people[index].bioText),
-                ],
+          child: Stack(
+            children: <Widget>[
+              new Card(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget> [
+                      Text("You've reached the end."),
+                      Text("Come back later to see more suggestions!")
+                    ],
+                  ),  
+                )
+              ),  
+              new TinderSwapCard(
+                swipeUp: true,
+                swipeDown: true,
+                orientation: AmassOrientation.BOTTOM,
+                totalNum: people.length,
+                stackNum: 3,
+                swipeEdge: 5.0,
+                maxWidth: MediaQuery.of(context).size.width * 1,
+                maxHeight: MediaQuery.of(context).size.width * 3,
+                minWidth: MediaQuery.of(context).size.width * 0.95,
+                minHeight: MediaQuery.of(context).size.width * 0.95,
+                cardBuilder: (context, index) => Card(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: <Widget>[
+                      Image.asset('${people[index].image}'),
+                      Text(people[index].name),
+                      Chip(label: Text(people[index].tag1)),
+                      Chip(label: Text(people[index].tag2)),
+                      Chip(label: Text(people[index].tag3)),
+                      Text(people[index].bioText),
+                    ],
+                  ),
+                ),
+                cardController: controller = CardController(),
+                swipeUpdateCallback: (DragUpdateDetails details, Alignment align) {
+                  /// Get swiping card's alignment
+                  if (align.x < 0) {
+                    //Card is LEFT swiping
+
+                  } else if (align.x > 0) {
+                    //Card is RIGHT swiping
+                  }
+                },
+                swipeCompleteCallback:
+                  (CardSwipeOrientation orientation, int index) {
+                  /// Get orientation & index of swiped card!
+                },
               ),
-            ),
-            cardController: controller = CardController(),
-            swipeUpdateCallback:
-                (DragUpdateDetails details, Alignment align) {
-              /// Get swiping card's alignment
-              if (align.x < 0) {
-                //Card is LEFT swiping
-              } else if (align.x > 0) {
-                //Card is RIGHT swiping
-              }
-            },
-            swipeCompleteCallback:
-                (CardSwipeOrientation orientation, int index) {
-              /// Get orientation & index of swiped card!
-            },
+            ],
           ),
         ),
       ),
     );
-
   }
 }
 
@@ -122,7 +143,6 @@ class Person {
   String tag3;
   String bioText;
 
-  Person(this.image, this.name, this.tag1, this.tag2, this.tag3, this.bioText); //constructor
+  Person(this.image, this.name, this.tag1, this.tag2, this.tag3,
+      this.bioText); //constructor
 }
-
-
