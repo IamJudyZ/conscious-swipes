@@ -31,8 +31,17 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
-  Person user1, user2, user3, user4, user5, user6;
+  bool show = true;
+
+  Person user1;
+  Person user2;
+  Person user3;
+  Person user4;
+  Person user5;
+  Person user6;
   List<Person> people;
+  List<Person> userMatchedWith;
+  List<Person> matchedWithUser;
 
   _MyHomePageState() {
     user1 = Person('user1.jpg', 'Sarah', 'vegan', 'democrat', 'education',
@@ -48,8 +57,11 @@ class _MyHomePageState extends State<MyHomePage> {
     user6 = Person('user3.jpg', 'David', 'republican', 'pro-life', 'AI ethics',
         'Covid has not helped my social life');
     people = [user1, user2, user3, user4, user5, user6];
+    userMatchedWith = [];
+    matchedWithUser = [];
   }
-  void _onItemTapped(int index) {
+
+   void _onNavTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
@@ -58,11 +70,34 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     CardController controller;
+
+    Column match = new Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text("You and ${user6.name} were a match!",
+            style: TextStyle(fontSize: 25)),
+        Text("Chat with them at zoom.com/xyz", style: TextStyle(fontSize: 25)),
+        FlatButton(
+          child: Text(
+            'Cancel',
+            style: TextStyle(fontSize: 20.0),
+          ),
+          color: Colors.green,
+          textColor: Colors.white,
+          onPressed: () {
+            setState(() {
+              show = false;
+            });
+          }, //change this to make it go to next card
+        ),
+      ],
+    );
+
     Container swipe = Container(
       height: MediaQuery.of(context).size.height * 2,
       child: Stack(
         children: <Widget>[
-          Card(
+          new Card(
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -73,49 +108,45 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
-          GestureDetector(
-            onTap: () => {},
-            child: TinderSwapCard(
-              allowVerticalMovement: false,
-              totalNum: people.length,
-              stackNum: 3,
-              maxWidth: MediaQuery.of(context).size.width * 1,
-              maxHeight: MediaQuery.of(context).size.width * 1.4,
-              minWidth: MediaQuery.of(context).size.width * 0.95,
-              minHeight: MediaQuery.of(context).size.width * 0.95,
-              cardBuilder: (context, index) => Card(
+          if (show)
+            Card(
+              child: Center(child: match),
+            ),
+          new TinderSwapCard(
+            swipeUp: true,
+            swipeDown: true,
+            orientation: AmassOrientation.BOTTOM,
+            totalNum: people.length,
+            swipeEdge: 5.0,
+            maxWidth: MediaQuery.of(context).size.width * 1,
+            maxHeight: MediaQuery.of(context).size.width * 3,
+            minWidth: MediaQuery.of(context).size.width * 0.95,
+            minHeight: MediaQuery.of(context).size.width * 0.95,
+            cardBuilder: (context, index) => Card(
                 child: Container(
-                  padding: const EdgeInsets.only(
-                      bottom: 20, top: 20, left: 20, right: 20),
+                  padding: const EdgeInsets.only(bottom: 20, top: 20, left: 20, right: 20),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: <Widget>[
-                      Container(
-                        width: 250.0,
-                        height: 250.0,
-                        alignment: Alignment.center,
-                        decoration: new BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage('${people[index].image}'),
-                              fit: BoxFit.fill),
-                        ),
-                      ),
+                      Image.asset('${people[index].image}'),
                       Column(
                         children: [
                           Row(
                             children: [
                               RichText(
                                 text: TextSpan(
-                                    style: DefaultTextStyle.of(context).style,
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                          text: people[index].name,
-                                          style: TextStyle(
-                                            fontFamily: 'Raleway',
-                                            fontSize: 25.0,
-                                            fontWeight: FontWeight.bold,
-                                          )),
-                                    ]),
+                                  style: DefaultTextStyle.of(context).style,
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: people[index].name,
+                                      style: TextStyle(
+                                        fontFamily: 'Raleway',
+                                        fontSize: 25.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ]
+                                ),
                               )
                             ],
                           ),
@@ -139,24 +170,24 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               cardController: controller = CardController(),
               swipeUpdateCallback:
-                  (DragUpdateDetails details, Alignment align) {
+                (DragUpdateDetails details, Alignment align) {
                 /// Get swiping card's alignment
                 if (align.x < 0) {
                 } else if (align.x > 0) {}
               },
               swipeCompleteCallback:
-                  (CardSwipeOrientation orientation, int index) {
-                if (orientation == CardSwipeOrientation.RIGHT) {
-                  if (!user.userMatchedWith.contains(people[index]))
-                    user.userMatchedWith.add(people[index]);
-                } else {
-                  user.userMatchedWith.remove(people[index]);
-                }
-                setState(() {
-                  people.removeAt(index);
-                });
-              },
-            ),
+                (CardSwipeOrientation orientation, int index) {
+                  if (orientation == CardSwipeOrientation.RIGHT) {
+                    if (!user.userMatchedWith.contains(people[index])) {
+                      user.userMatchedWith.add(people[index]);
+                    }
+                  } else {
+                    user.userMatchedWith.remove(people[index]);
+                  }
+                  setState(() {
+                    people.removeAt(index);
+                  });
+                },
           ),
         ],
       ),
@@ -227,7 +258,7 @@ class _MyHomePageState extends State<MyHomePage> {
     ];
 
     return new Scaffold(
-      body: _pages.elementAt(_selectedIndex),
+      body: SafeArea(child: new Center(child: _pages.elementAt(_selectedIndex))),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -245,7 +276,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
+        onTap: _onNavTapped,
       ),
     );
   }
@@ -268,15 +299,7 @@ class MatchInfo extends StatelessWidget {
                 style: TextStyle(fontSize: 25)),
             Text("Chat with them at zoom.com/xyz!",
                 style: TextStyle(fontSize: 25)),
-            FlatButton(
-              child: Text(
-                'Cancel',
-                style: TextStyle(fontSize: 20.0),
-              ),
-              color: Colors.green,
-              textColor: Colors.white,
-              onPressed: () {}, //change this to make it do something
-            ),
+            
           ],
         ),
       ),
