@@ -50,6 +50,7 @@ flutter:
     - user1.jpg
     - user2.jpg
     - user3.jpg
+    - Jason.jpg
 
   fonts:
      - family: Raleway

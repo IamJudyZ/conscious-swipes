@@ -30,7 +30,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 2;
 
   bool show = true;
 
@@ -222,40 +222,85 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       Center(child: swipe),
-      Stack(
-        alignment: Alignment.center,
-        children: <Widget>[
-          Column(
+      Card( /////////////////////////////////////////////////////////////////////////////////////
+        child: Container(
+          padding: const EdgeInsets.only(bottom: 20, top: 20, left: 20, right: 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              Container(
-                height: 200.0,
-                color: Colors.orange,
-                child: Center(
-                  child: Image.asset('user1.jpg'),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  color: Colors.white,
-                  child: Center(
-                    child: Text('Introduction here'),
+              Image.asset('${user.image}'),
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          style: DefaultTextStyle.of(context).style,
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: user.name,
+                              style: TextStyle(
+                                fontFamily: 'Raleway',
+                                fontSize: 25.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ]
+                        ),
+                      )
+                    ],
                   ),
-                ),
-              )
+                  Row(
+                    children: [
+                      Text(user.bioText),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Chip(label: Text(user.tag1)),
+                      Chip(label: Text(user.tag2)),
+                      Chip(label: Text(user.tag3)),
+                    ],
+                  ),
+                ],
+              ),
             ],
           ),
-          // Profile image
-          Positioned(
-            top: 150.0,
-            child: Container(
-              height: 100.0,
-              width: 100.0,
-              decoration:
-                  BoxDecoration(shape: BoxShape.circle, color: Colors.green),
-            ),
-          )
-        ],
-      )
+        ),
+      ),  
+    //     alignment: Alignment.center,
+    //     children: <Widget>[
+    //       Column(
+    //         children: <Widget>[
+    //           Container(
+    //             height: 200.0,
+    //             color: Colors.orange,
+    //             child: Center(
+    //               child: Image.asset('user1.jpg'),
+    //             ),
+    //           ),
+    //           Expanded(
+    //             child: Container(
+    //               color: Colors.white,
+    //               child: Center(
+    //                 child: Text('Introduction here'),
+    //               ),
+    //             ),
+    //           )
+    //         ],
+    //       ),
+    //       // Profile image
+    //       Positioned(
+    //         top: 150.0,
+    //         child: Container(
+    //           height: 100.0,
+    //           width: 100.0,
+    //           decoration:
+    //               BoxDecoration(shape: BoxShape.circle, color: Colors.green),
+    //         ),
+    //       )
+    //     ],
+    //   )
     ];
 
     return new Scaffold(
@@ -321,4 +366,4 @@ class Person {
       this.bioText); //constructor
 }
 
-Person user = new Person(null, 'Myself', '', '', '', '');
+Person user = new Person('Jason.jpg', 'Jason', '', '', '', '');
