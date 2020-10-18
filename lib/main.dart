@@ -44,6 +44,10 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Person> userMatchedWith;
   List<Person> matchedWithUser;
 
+  String dropdownValue1 = 'not selected';
+  String dropdownValue2 = 'not selected';
+  String dropdownValue3 = 'not selected';
+
   _MyHomePageState() {
     user1 = Person('user1.jpg', 'Sarah', 'vegan', 'democrat', 'education',
         'I like to talk to people!');
@@ -62,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
     matchedWithUser = [];
   }
 
-   void _onNavTapped(int index) {
+  void _onNavTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
@@ -71,6 +75,23 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     CardController controller;
+
+    List<String> values = <String>[
+      'not selected',
+      'Christian',
+      'Sustainability'
+      'Vegan',
+      'Democrat',
+      'Republican',
+      'Pro-life',
+      'Muslim',
+      'Jewish',
+      'Atheist',
+      'Education',
+      'Healthcare',
+      '2020 Elections',
+      'AI Ethics'
+    ];
 
     Column match = new Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -124,18 +145,19 @@ class _MyHomePageState extends State<MyHomePage> {
             minWidth: MediaQuery.of(context).size.width * 0.95,
             minHeight: MediaQuery.of(context).size.width * 0.95,
             cardBuilder: (context, index) => Card(
-                child: Container(
-                  padding: const EdgeInsets.only(bottom: 20, top: 20, left: 20, right: 20),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: <Widget>[
-                      Image.asset('${people[index].image}'),
-                      Column(
-                        children: [
-                          Row(
-                            children: [
-                              RichText(
-                                text: TextSpan(
+              child: Container(
+                padding: const EdgeInsets.only(
+                    bottom: 20, top: 20, left: 20, right: 20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Image.asset('${people[index].image}'),
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            RichText(
+                              text: TextSpan(
                                   style: DefaultTextStyle.of(context).style,
                                   children: <TextSpan>[
                                     TextSpan(
@@ -146,49 +168,47 @@ class _MyHomePageState extends State<MyHomePage> {
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                  ]
-                                ),
-                              )
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text(people[index].bioText),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Chip(label: Text(people[index].tag1)),
-                              Chip(label: Text(people[index].tag2)),
-                              Chip(label: Text(people[index].tag3)),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                                  ]),
+                            )
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text(people[index].bioText),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Chip(label: Text(people[index].tag1)),
+                            Chip(label: Text(people[index].tag2)),
+                            Chip(label: Text(people[index].tag3)),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-              cardController: controller = CardController(),
-              swipeUpdateCallback:
-                (DragUpdateDetails details, Alignment align) {
-                /// Get swiping card's alignment
-                if (align.x < 0) {
-                } else if (align.x > 0) {}
-              },
-              swipeCompleteCallback:
+            ),
+            cardController: controller = CardController(),
+            swipeUpdateCallback: (DragUpdateDetails details, Alignment align) {
+              /// Get swiping card's alignment
+              if (align.x < 0) {
+              } else if (align.x > 0) {}
+            },
+            swipeCompleteCallback:
                 (CardSwipeOrientation orientation, int index) {
-                  if (orientation == CardSwipeOrientation.RIGHT) {
-                    if (!user.userMatchedWith.contains(people[index])) {
-                      user.userMatchedWith.add(people[index]);
-                    }
-                  } else {
-                    user.userMatchedWith.remove(people[index]);
-                  }
-                  setState(() {
-                    people.removeAt(index);
-                  });
-                },
+              if (orientation == CardSwipeOrientation.RIGHT) {
+                if (!user.userMatchedWith.contains(people[index])) {
+                  user.userMatchedWith.add(people[index]);
+                }
+              } else {
+                user.userMatchedWith.remove(people[index]);
+              }
+              setState(() {
+                people.removeAt(index);
+              });
+            },
           ),
         ],
       ),
@@ -222,9 +242,11 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       Center(child: swipe),
-      Card( /////////////////////////////////////////////////////////////////////////////////////
+      Card(
+        /////////////////////////////////////////////////////////////////////////////////////
         child: Container(
-          padding: const EdgeInsets.only(bottom: 20, top: 20, left: 20, right: 20),
+          padding:
+              const EdgeInsets.only(bottom: 20, top: 20, left: 20, right: 20),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
@@ -235,18 +257,18 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: [
                       RichText(
                         text: TextSpan(
-                          style: DefaultTextStyle.of(context).style,
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: user.name,
-                              style: TextStyle(
-                                fontFamily: 'Raleway',
-                                fontSize: 25.0,
-                                fontWeight: FontWeight.bold,
+                            // style: DefaultTextStyle.of(context).style,
+                            style: TextStyle(color: Colors.black),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: user.name,
+                                style: TextStyle(
+                                  fontFamily: 'Raleway',
+                                  fontSize: 25.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                          ]
-                        ),
+                            ]),
                       )
                     ],
                   ),
@@ -255,11 +277,74 @@ class _MyHomePageState extends State<MyHomePage> {
                       Text(user.bioText),
                     ],
                   ),
-                  Row(
+                  Column(
                     children: [
-                      Chip(label: Text(user.tag1)),
-                      Chip(label: Text(user.tag2)),
-                      Chip(label: Text(user.tag3)),
+                      DropdownButton<String>(
+                        value: dropdownValue1,
+                        icon: Icon(Icons.arrow_downward),
+                        iconSize: 24,
+                        elevation: 16,
+                        style: TextStyle(color: Colors.black),
+                        underline: Container(
+                          height: 2,
+                          color: Colors.black,
+                        ),
+                        onChanged: (String newValue) {
+                          setState(() {
+                            dropdownValue1 = newValue;
+                          });
+                        },
+                        items: values.map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                      DropdownButton<String>(
+                        value: dropdownValue2,
+                        icon: Icon(Icons.arrow_downward),
+                        iconSize: 24,
+                        elevation: 16,
+                        style: TextStyle(color: Colors.black),
+                        underline: Container(
+                          height: 2,
+                          color: Colors.black,
+                        ),
+                        onChanged: (String newValue) {
+                          setState(() {
+                            dropdownValue2 = newValue;
+                          });
+                        },
+                        items: values.map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                      DropdownButton<String>(
+                        value: dropdownValue3,
+                        icon: Icon(Icons.arrow_downward),
+                        iconSize: 24,
+                        elevation: 16,
+                        style: TextStyle(color: Colors.black),
+                        underline: Container(
+                          height: 2,
+                          color: Colors.black,
+                        ),
+                        onChanged: (String newValue) {
+                          setState(() {
+                            dropdownValue3 = newValue;
+                          });
+                        },
+                        items: values.map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
                     ],
                   ),
                 ],
@@ -267,44 +352,12 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
         ),
-      ),  
-    //     alignment: Alignment.center,
-    //     children: <Widget>[
-    //       Column(
-    //         children: <Widget>[
-    //           Container(
-    //             height: 200.0,
-    //             color: Colors.orange,
-    //             child: Center(
-    //               child: Image.asset('user1.jpg'),
-    //             ),
-    //           ),
-    //           Expanded(
-    //             child: Container(
-    //               color: Colors.white,
-    //               child: Center(
-    //                 child: Text('Introduction here'),
-    //               ),
-    //             ),
-    //           )
-    //         ],
-    //       ),
-    //       // Profile image
-    //       Positioned(
-    //         top: 150.0,
-    //         child: Container(
-    //           height: 100.0,
-    //           width: 100.0,
-    //           decoration:
-    //               BoxDecoration(shape: BoxShape.circle, color: Colors.green),
-    //         ),
-    //       )
-    //     ],
-    //   )
+      ),
     ];
 
     return new Scaffold(
-      body: SafeArea(child: new Center(child: _pages.elementAt(_selectedIndex))),
+      body:
+          SafeArea(child: new Center(child: _pages.elementAt(_selectedIndex))),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -345,7 +398,6 @@ class MatchInfo extends StatelessWidget {
                 style: TextStyle(fontSize: 25)),
             Text("Chat with them at zoom.com/xyz!",
                 style: TextStyle(fontSize: 25)),
-            
           ],
         ),
       ),
@@ -366,4 +418,5 @@ class Person {
       this.bioText); //constructor
 }
 
-Person user = new Person('Jason.jpg', 'Jason', '', '', '', '');
+Person user = new Person(
+    'Jason.jpg', 'Jason', '', '', '', 'I know a lot about android development');
