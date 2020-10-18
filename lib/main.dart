@@ -30,7 +30,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
-  int removed = 0;
 
   Person user1, user2, user3, user4, user5, user6;
   List<Person> people;
@@ -74,85 +73,90 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
-          TinderSwapCard(
-            totalNum: people.length,
-            stackNum: 3,
-            maxWidth: MediaQuery.of(context).size.width * 1,
-            maxHeight: MediaQuery.of(context).size.width * 1.4,
-            minWidth: MediaQuery.of(context).size.width * 0.95,
-            minHeight: MediaQuery.of(context).size.width * 0.95,
-            cardBuilder: (context, index) => Card(
-              child: Container(
-                padding: const EdgeInsets.only(
-                    bottom: 20, top: 20, left: 20, right: 20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: <Widget>[
-                    Container(
-                      width: 250.0,
-                      height: 250.0,
-                      alignment: Alignment.center,
-                      decoration: new BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage('${people[index].image}'),
-                            fit: BoxFit.fill),
+          GestureDetector(
+            onTap: () => {},
+            child: TinderSwapCard(
+              allowVerticalMovement: false,
+              totalNum: people.length,
+              stackNum: 3,
+              maxWidth: MediaQuery.of(context).size.width * 1,
+              maxHeight: MediaQuery.of(context).size.width * 1.4,
+              minWidth: MediaQuery.of(context).size.width * 0.95,
+              minHeight: MediaQuery.of(context).size.width * 0.95,
+              cardBuilder: (context, index) => Card(
+                child: Container(
+                  padding: const EdgeInsets.only(
+                      bottom: 20, top: 20, left: 20, right: 20),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: <Widget>[
+                      Container(
+                        width: 250.0,
+                        height: 250.0,
+                        alignment: Alignment.center,
+                        decoration: new BoxDecoration(
+                          image: DecorationImage(
+                              image: AssetImage('${people[index].image}'),
+                              fit: BoxFit.fill),
+                        ),
                       ),
-                    ),
-                    Column(
-                      children: [
-                        Row(
-                          children: [
-                            RichText(
-                              text: TextSpan(
-                                  style: DefaultTextStyle.of(context).style,
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                        text: people[index].name,
-                                        style: TextStyle(
-                                          fontFamily: 'Raleway',
-                                          fontSize: 25.0,
-                                          fontWeight: FontWeight.bold,
-                                        )),
-                                  ]),
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text(people[index].bioText),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Chip(label: Text(people[index].tag1)),
-                            Chip(label: Text(people[index].tag2)),
-                            Chip(label: Text(people[index].tag3)),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
+                      Column(
+                        children: [
+                          Row(
+                            children: [
+                              RichText(
+                                text: TextSpan(
+                                    style: DefaultTextStyle.of(context).style,
+                                    children: <TextSpan>[
+                                      TextSpan(
+                                          text: people[index].name,
+                                          style: TextStyle(
+                                            fontFamily: 'Raleway',
+                                            fontSize: 25.0,
+                                            fontWeight: FontWeight.bold,
+                                          )),
+                                    ]),
+                              )
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text(people[index].bioText),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Chip(label: Text(people[index].tag1)),
+                              Chip(label: Text(people[index].tag2)),
+                              Chip(label: Text(people[index].tag3)),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            cardController: controller = CardController(),
-            swipeUpdateCallback: (DragUpdateDetails details, Alignment align) {
-              /// Get swiping card's alignment
-              if (align.x < 0) {
-              } else if (align.x > 0) {}
-            },
-            swipeCompleteCallback:
-                (CardSwipeOrientation orientation, int index) {
-              if (orientation == CardSwipeOrientation.RIGHT) {
-                if (!user.userMatchedWith.contains(people[index]))
-                  user.userMatchedWith.add(people[index]);
-              } else {
-                setState(() {
+              cardController: controller = CardController(),
+              swipeUpdateCallback:
+                  (DragUpdateDetails details, Alignment align) {
+                /// Get swiping card's alignment
+                if (align.x < 0) {
+                } else if (align.x > 0) {}
+              },
+              swipeCompleteCallback:
+                  (CardSwipeOrientation orientation, int index) {
+                if (orientation == CardSwipeOrientation.RIGHT) {
+                  if (!user.userMatchedWith.contains(people[index]))
+                    user.userMatchedWith.add(people[index]);
+                } else {
                   user.userMatchedWith.remove(people[index]);
+                }
+                setState(() {
                   people.removeAt(index);
                 });
-              }
-            },
+              },
+            ),
           ),
         ],
       ),
