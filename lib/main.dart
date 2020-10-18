@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-//import 'package:flutter/services.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(MyApp());
@@ -66,6 +66,9 @@ class _MyHomePageState extends State<MyHomePage> {
     matchedWithUser = [];
   }
 
+  String _bio = "Type bio here";
+  final _bioController = TextEditingController();
+
   void _onNavTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -79,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
     List<String> values = <String>[
       'not selected',
       'Christian',
-      'Sustainability'
+      'Sustainability',
       'Vegan',
       'Democrat',
       'Republican',
@@ -95,10 +98,21 @@ class _MyHomePageState extends State<MyHomePage> {
 
     Column match = new Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
+      children: [
         Text("You and ${user6.name} were a match!",
             style: TextStyle(fontSize: 25)),
-        Text("Chat with them at zoom.com/xyz", style: TextStyle(fontSize: 25)),
+        Text(
+          "Chat with them at",
+          style: TextStyle(
+            fontSize: 25,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        Text(
+            "https://us04web.zoom.us/j/9732870476?pwd=MHY4M2I5ajRsTDdReisyRmNGM201UT09",
+            style:
+                TextStyle(fontSize: 25, decoration: TextDecoration.underline),
+            textAlign: TextAlign.center),
         FlatButton(
           child: Text(
             'Cancel',
@@ -223,7 +237,7 @@ class _MyHomePageState extends State<MyHomePage> {
             return GestureDetector(
               child: Container(
                 height: 50,
-                color: Colors.amber[300],
+                color: Colors.green,
                 child:
                     Center(child: Text('${user.userMatchedWith[index].name}')),
               ),
@@ -247,109 +261,139 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Container(
           padding:
               const EdgeInsets.only(bottom: 20, top: 20, left: 20, right: 20),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              Image.asset('${user.image}'),
-              Column(
-                children: [
-                  Row(
-                    children: [
-                      RichText(
-                        text: TextSpan(
-                            // style: DefaultTextStyle.of(context).style,
-                            style: TextStyle(color: Colors.black),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: user.name,
-                                style: TextStyle(
-                                  fontFamily: 'Raleway',
-                                  fontSize: 25.0,
-                                  fontWeight: FontWeight.bold,
+          child: ListView(
+                      children: [Column(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Image.asset('${user.image}'),
+                Column(
+                  children: [
+                    Row(
+                      children: [
+                        RichText(
+                          text: TextSpan(
+                              // style: DefaultTextStyle.of(context).style,
+                              style: TextStyle(color: Colors.black),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: user.name,
+                                  style: TextStyle(
+                                    fontFamily: 'Raleway',
+                                    fontSize: 25.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                            ]),
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text(user.bioText),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      DropdownButton<String>(
-                        value: dropdownValue1,
-                        icon: Icon(Icons.arrow_downward),
-                        iconSize: 24,
-                        elevation: 16,
-                        style: TextStyle(color: Colors.black),
-                        underline: Container(
-                          height: 2,
-                          color: Colors.black,
+                              ]),
+                        )
+                      ],
+                    ),
+                    Center(
+                      child: GestureDetector(
+                          child: Text(_bio),
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text("Bio"),
+                                  content: TextFormField(
+                                    controller: _bioController,
+                                  ),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      child: Text("Save"),
+                                      onPressed: () {
+                                        Navigator.pop(
+                                            context, _bioController.text);
+                                      },
+                                    )
+                                  ],
+                                );
+                              },
+                            ).then((val) {
+                              setState(() {
+                                _bio = val;
+                              });
+                            });
+                          }),
+                    ),
+                    Column(
+                      children: [
+                        DropdownButton<String>(
+                          value: dropdownValue1,
+                          icon: Icon(Icons.arrow_downward),
+                          iconSize: 24,
+                          elevation: 16,
+                          style: TextStyle(color: Colors.black),
+                          underline: Container(
+                            height: 2,
+                            color: Colors.black,
+                          ),
+                          onChanged: (String newValue) {
+                            setState(() {
+                              dropdownValue1 = newValue;
+                            });
+                          },
+                          items: values
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
                         ),
-                        onChanged: (String newValue) {
-                          setState(() {
-                            dropdownValue1 = newValue;
-                          });
-                        },
-                        items: values.map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                      ),
-                      DropdownButton<String>(
-                        value: dropdownValue2,
-                        icon: Icon(Icons.arrow_downward),
-                        iconSize: 24,
-                        elevation: 16,
-                        style: TextStyle(color: Colors.black),
-                        underline: Container(
-                          height: 2,
-                          color: Colors.black,
+                        DropdownButton<String>(
+                          value: dropdownValue2,
+                          icon: Icon(Icons.arrow_downward),
+                          iconSize: 24,
+                          elevation: 16,
+                          style: TextStyle(color: Colors.black),
+                          underline: Container(
+                            height: 2,
+                            color: Colors.black,
+                          ),
+                          onChanged: (String newValue) {
+                            setState(() {
+                              dropdownValue2 = newValue;
+                            });
+                          },
+                          items: values
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
                         ),
-                        onChanged: (String newValue) {
-                          setState(() {
-                            dropdownValue2 = newValue;
-                          });
-                        },
-                        items: values.map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                      ),
-                      DropdownButton<String>(
-                        value: dropdownValue3,
-                        icon: Icon(Icons.arrow_downward),
-                        iconSize: 24,
-                        elevation: 16,
-                        style: TextStyle(color: Colors.black),
-                        underline: Container(
-                          height: 2,
-                          color: Colors.black,
+                        DropdownButton<String>(
+                          value: dropdownValue3,
+                          icon: Icon(Icons.arrow_downward),
+                          iconSize: 24,
+                          elevation: 16,
+                          style: TextStyle(color: Colors.black),
+                          underline: Container(
+                            height: 2,
+                            color: Colors.black,
+                          ),
+                          onChanged: (String newValue) {
+                            setState(() {
+                              dropdownValue3 = newValue;
+                            });
+                          },
+                          items: values
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
                         ),
-                        onChanged: (String newValue) {
-                          setState(() {
-                            dropdownValue3 = newValue;
-                          });
-                        },
-                        items: values.map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),]
           ),
         ),
       ),
@@ -374,7 +418,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
+        selectedItemColor: Colors.green,
         onTap: _onNavTapped,
       ),
     );
@@ -396,8 +440,18 @@ class MatchInfo extends StatelessWidget {
           children: <Widget>[
             Text("You and $_matcher were a match!",
                 style: TextStyle(fontSize: 25)),
-            Text("Chat with them at zoom.com/xyz!",
-                style: TextStyle(fontSize: 25)),
+            Text(
+              "Chat with them at",
+              style: TextStyle(
+                fontSize: 25,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            Text(
+                "https://us04web.zoom.us/j/9732870476?pwd=MHY4M2I5ajRsTDdReisyRmNGM201UT09",
+                style: TextStyle(
+                    fontSize: 25, decoration: TextDecoration.underline),
+                textAlign: TextAlign.center),
           ],
         ),
       ),
@@ -418,5 +472,4 @@ class Person {
       this.bioText); //constructor
 }
 
-Person user = new Person(
-    'Jason.jpg', 'Jason', '', '', '', 'I know a lot about android development');
+Person user = new Person('Jason.jpg', 'Jason', '', '', '', '');
