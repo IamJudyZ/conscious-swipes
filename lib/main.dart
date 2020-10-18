@@ -48,11 +48,11 @@ class _MyHomePageState extends State<MyHomePage> {
         'democrat', 'Get to know me!');
     user3 = Person('user3.jpg', 'Tom', 'republican', 'pro-life', 'education',
         'Swipe right if you want to have a nice chat!');
-    user4 = Person('user1.jpg', 'Annie', 'healthcare', '2020 elections',
+    user4 = Person('user4.jpg', 'Jeremy', 'healthcare', '2020 elections',
         'education', 'Looking for a good conversation!');
-    user5 = Person('user2.jpg', 'Markus', 'christian', 'sustainability',
-        'vegan', 'Just chattin');
-    user6 = Person('user3.jpg', 'David', 'republican', 'pro-life', 'AI ethics',
+    user5 = Person('user5.jpg', 'Lila', 'christian', 'sustainability', 'vegan',
+        'Just chattin');
+    user6 = Person('user6.jpg', 'Andrea', 'republican', 'pro-life', 'AI ethics',
         'Covid has not helped my social life');
     people = [user1, user2, user3, user4, user5, user6];
     userMatchedWith = [];
