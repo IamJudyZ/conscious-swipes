@@ -29,7 +29,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
-
+  bool show = true;
 
   Person user1;
   Person user2;
@@ -37,6 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Person> people;
   List<Person> userMatchedWith;
   List<Person> matchedWithUser;
+
 
   _MyHomePageState() {
     user1 = Person('user1.jpg', 'Sarah', 'vegan', 'democrat', 'education',
@@ -56,15 +57,39 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     CardController controller;
+    
+
+    Column match = new Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text("You and ${user3.name} were a match!",
+            style: TextStyle(fontSize: 25)),
+        Text("Chat with them at zoom.com/xyz", style: TextStyle(fontSize: 25)),
+        FlatButton(
+          child: Text(
+            'Cancel',
+            style: TextStyle(fontSize: 20.0),
+          ),
+          color: Colors.green,
+          textColor: Colors.white,
+          onPressed: () {
+            setState(() {
+              show = false;
+              print("show to false");
+            });
+          }, //change this to make it go to next card
+        ),
+      ],
+    );
 
     Container swipe = new Container(
       height: MediaQuery.of(context).size.height * 2,
       child: Stack(
         children: <Widget>[
+          //run out of suggestions
           new Card(
             child: Center(
               child: Column(
@@ -76,28 +101,12 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
-          new Card(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text("You and ${user3.name} were a match!",
-                      style: TextStyle(fontSize: 25)),
-                  Text("Chat with them at zoom.com/xyz!",
-                      style: TextStyle(fontSize: 25)),
-                  FlatButton(
-                    child: Text(
-                      'Cancel',
-                      style: TextStyle(fontSize: 20.0),
-                    ),
-                    color: Colors.green,
-                    textColor: Colors.white,
-                    onPressed: () {}, //change this to make it do something
-                  ),
-                ],
-              ),
+          //match with someone
+          if (show)
+            Card(
+              child: Center(child: match),
             ),
-          ),
+          //swipe through suggestions
           new TinderSwapCard(
             swipeUp: true,
             swipeDown: true,
@@ -132,9 +141,9 @@ class _MyHomePageState extends State<MyHomePage> {
               }
             },
             swipeCompleteCallback:
-              (CardSwipeOrientation orientation, int index) {
+                (CardSwipeOrientation orientation, int index) {
               /// Get orientation & index of swiped card!
-              },
+            },
           ),
         ],
       ),
@@ -147,7 +156,8 @@ class _MyHomePageState extends State<MyHomePage> {
     ];
 
     return new Scaffold(
-      body: new Center(child: _pages.elementAt(_selectedIndex)),
+      
+      body: SafeArea(child: new Center(child: _pages.elementAt(_selectedIndex))),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
